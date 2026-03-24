@@ -1,0 +1,45 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/*
+.fi-sidebar {
+    background-color: #ececec;
+}
+.fi-sidebar    &:where(.dark, .dark *) {
+    background-color: #0f0f0f;
+}
+
+
+.fi-main{
+    background-color: #e1e1e1;
+}
+
+.fi-ta-row {
+    &.fi-striped {
+        background-color: #eeeeee;
+    }
+}
+
+.fi-sidebar-item-btn {
+    &:hover {
+        background-color: #d4d4d4;
+    }
+    &.fi-active {
+        background-color: #c0c0c0;
+        font-weight: bold;
+    }
+}
+
+
+
+
+
+ */

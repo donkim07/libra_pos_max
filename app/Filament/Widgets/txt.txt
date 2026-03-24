@@ -1,0 +1,165 @@
+<?php
+
+namespace App\Filament\Widgets;
+
+use App\Models\Sale;
+use Flowframe\Trend\Trend;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Carbon;
+use Flowframe\Trend\TrendValue;
+use Filament\Widgets\ChartWidget;
+use Filament\Forms\Components\DatePicker;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
+
+class MonthlySalesChart extends ChartWidget
+{
+    use InteractsWithPageFilters;
+    use HasFiltersSchema;
+        use HasWidgetShield;
+
+    protected static ?int $sort = 2;
+
+    protected static bool $isLazy = false;
+
+    // NO 'static' here
+    protected ?string $heading = 'Monthly Sales Revenue';
+
+    protected ?string $pollingInterval = null;
+
+    protected function getType(): string
+    {
+        return 'line';
+    }
+
+    public function filtersSchema(Schema $schema): Schema
+    {
+        return $schema->components([
+            DatePicker::make('start_date')
+                ->default(now()->subDays(30)),
+            DatePicker::make('end_date')
+                ->default(now()),
+        ]);
+    }
+
+    protected function getData(): array
+    {
+
+        $start = $this->filters['start_date'] ?? Carbon::now()->subYear();
+        $end = $this->filters['end_date'] ?? Carbon::now();
+
+        $data = Trend::model(Sale::class)
+            ->between(start: $start, end: $end)
+            ->perMonth()
+            ->sum('total');
+
+        return [
+            'datasets' => [
+                [
+                    'label'           => 'Sales Revenue (TZS)',
+                    'data'            => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'backgroundColor' => '#36A2EB',
+                    'borderColor'     => '#36A2EB',
+                ],
+            ],
+            'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M Y')),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => ['display' => true],
+            ],
+        ];
+    }
+}
+
+
+<?php
+
+namespace App\Filament\Widgets;
+
+use App\Models\SalesItem;
+use Filament\Schemas\Schema;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
+use Filament\Forms\Components\DatePicker;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
+
+class TopSoldItemsChart extends ChartWidget
+{
+    use InteractsWithPageFilters;
+    use HasFiltersSchema;
+        use HasWidgetShield;
+
+    protected  ?string $heading = 'Top 10 Most Sold Items';
+
+    protected static bool $isLazy = false;
+
+    protected static ?int $sort = 2; // position on dashboard
+
+    protected function getType(): string
+    {
+        return 'bar';
+    }
+
+        public function filtersSchema(Schema $schema): Schema
+    {
+        return $schema->components([
+            DatePicker::make('startDate')
+                ->default(now()->subDays(30)),
+            DatePicker::make('endDate')
+                ->default(now()),
+        ]);
+    }
+
+    protected function getData(): array
+    {
+        $start = $this->filters['start_date'] ?? now()->subYear();
+        $end   = $this->filters['end_date']   ?? now();
+
+$topItems = SalesItem::query()
+    ->select('sales_items.item_id', DB::raw('SUM(sales_items.quantity) as total_qty'), 'items.name')
+    ->join('items', 'sales_items.item_id', '=', 'items.id')
+    ->whereBetween('sales_items.created_at', [$start, $end])
+    ->groupBy('sales_items.item_id', 'items.name')
+    ->orderByDesc('total_qty')
+    ->limit(10)
+    ->get();
+
+        return [
+            'datasets' => [
+                [
+                    'label'           => 'Quantity Sold',
+                    'data'            => $topItems->pluck('total_qty')->toArray(),
+                    'backgroundColor' => [
+                        '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
+                        '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac'
+                    ],
+                    'borderColor'     => 'transparent',
+                ],
+            ],
+            'labels' => $topItems->pluck('name')->toArray(),
+
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'indexAxis' => 'x',           // horizontal bars (better for long item names)
+            'plugins' => [
+                'legend' => ['display' => false],
+                'title'  => ['display' => true, 'text' => 'Top 10 Most Sold Items'],
+            ],
+            'scales' => [
+                'y' => ['title' => ['display' => true, 'text' => 'Quantity Sold']],
+            ],
+        ];
+    }
+}
