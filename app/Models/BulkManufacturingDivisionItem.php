@@ -10,7 +10,7 @@ class BulkManufacturingDivisionItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'bulk_manufacturing_division_id',
+        'bulk_man_division_id',
         'item_id',
         'quantity',
         'unit_cost',

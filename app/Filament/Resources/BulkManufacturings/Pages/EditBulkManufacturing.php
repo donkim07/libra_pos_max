@@ -28,6 +28,7 @@ class EditBulkManufacturing extends EditRecord
             'quantity' => $record->quantity,
             'notes' => $record->notes,
             'remaining_quantity' => $record->remaining_quantity,
+            'initial_remaining_quantity' => $record->remaining_quantity,
             'is_finished' => $record->is_finished,
             'waste_quantity' => $record->waste_quantity,
             'historical_ingredients' => $record->items->map(function ($item) {

@@ -46,6 +46,7 @@ class CreateBulkManufacturing extends CreateRecord
         }
 
         $data['remaining_quantity'] = (float) $data['quantity'] - $sumBase;
+        $data['initial_remaining_quantity'] = (float) $data['quantity'];
         $data['is_finished'] = $data['is_finished'] ?? false;
         $data['waste_quantity'] = 0;
 

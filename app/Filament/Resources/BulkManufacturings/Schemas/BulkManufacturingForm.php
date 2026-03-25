@@ -71,6 +71,7 @@ class BulkManufacturingForm
                                 if (!$itemId || !(float)$state > 0) {
                                     $set('ingredients', []);
                                     $set('remaining_quantity', 0);
+                                    $set('initial_remaining_quantity', 0);
                                     return;
                                 }
 
@@ -107,6 +108,7 @@ class BulkManufacturingForm
 
                                 $set('ingredients', $ingredients);
                                 $set('remaining_quantity', (float)$state);
+                                $set('initial_remaining_quantity', (float)$state);
                             }),
 
                         Section::make('Ingredients / Components (Total Used)')
@@ -284,8 +286,10 @@ class BulkManufacturingForm
                             ->deletable(true)
                             ->addable(true)
                             ->live()
-                            ->afterStateUpdated(fn (Get $get, Set $set) => self::updateRemaining($get, $set))
-                            ->hidden(fn (Get $get) => $get('is_finished')),
+                            ->afterStateUpdated(fn (Get $get, Set $set) => self::updateRemaining($get, $set)),
+
+                        Hidden::make('initial_remaining_quantity')
+                            ->default(0),
 
                         TextInput::make('remaining_quantity')
                             ->label('Remaining Base Quantity')
@@ -297,6 +301,7 @@ class BulkManufacturingForm
                             ->label('Mark as Finished Divisioning')
                             ->live()
                             ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                self::updateRemaining($get, $set);
                                 if ($state) {
                                     $remaining = (float) $get('remaining_quantity');
                                     $set('waste_quantity', $remaining > 0 ? $remaining : 0);
@@ -324,7 +329,9 @@ class BulkManufacturingForm
             return (float) ($div['total_base_used'] ?? 0);
         });
 
-        $current = $get('operation') === 'create' ? (float) $get('quantity') : (float) $get('remaining_quantity');
+        $current = $get('operation') === 'create'
+            ? (float) $get('quantity')
+            : (float) $get('initial_remaining_quantity');
 
         $newRemaining = max(0, $current - $sum);
         $set('remaining_quantity', $newRemaining);
