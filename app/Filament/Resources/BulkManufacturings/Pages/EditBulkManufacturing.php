@@ -85,6 +85,14 @@ class EditBulkManufacturing extends EditRecord
         }
 
         $data['remaining_quantity'] = (float) $this->record->remaining_quantity - $sumNewBase;
+        if ($data['remaining_quantity'] <= 0.0001) {
+            $data['remaining_quantity'] = 0;
+            $data['is_finished'] = true;
+            $data['waste_quantity'] = 0;
+
+            return $data;
+        }
+
         $data['waste_quantity'] = 0;
 
         if (isset($data['is_finished']) && $data['is_finished'] && !$this->record->is_finished && $data['remaining_quantity'] > 0) {

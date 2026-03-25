@@ -112,7 +112,11 @@ class BulkManufacturingService
 
             $this->processDivisions($bulk, $data['divisions'] ?? [], $bulkBomItemIds, $totalCost);
 
-            if ($data['is_finished'] && $data['remaining_quantity'] > 0) {
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $bulk->remaining_quantity = 0;
+                $bulk->waste_quantity = 0;
+                $bulk->is_finished = true;
+            } elseif ($data['is_finished'] && $data['remaining_quantity'] > 0) {
                 $waste = $data['remaining_quantity'];
                 $beforeBulk = $bulkItem->getQuantityForStore($storeId);
                 if ($waste > $beforeBulk) {
@@ -141,7 +145,13 @@ class BulkManufacturingService
                 $bulk->remaining_quantity = $data['remaining_quantity'];
             }
 
-            $bulk->is_finished = $data['is_finished'];
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $bulk->is_finished = true;
+                $bulk->remaining_quantity = 0;
+                $bulk->waste_quantity = 0;
+            } else {
+                $bulk->is_finished = $data['is_finished'];
+            }
             $bulk->total_cost = $totalCost;
             $bulk->save();
 
@@ -173,7 +183,11 @@ class BulkManufacturingService
                 'total_cost' => $totalCost,
             ];
 
-            if ($updateData['is_finished'] && !$bulk->is_finished && $data['remaining_quantity'] > 0) {
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $updateData['remaining_quantity'] = 0;
+                $updateData['is_finished'] = true;
+                $updateData['waste_quantity'] = 0;
+            } elseif ($updateData['is_finished'] && !$bulk->is_finished && $data['remaining_quantity'] > 0) {
                 $waste = $data['remaining_quantity'];
                 $beforeBulk = $bulkItem->getQuantityForStore($storeId);
                 if ($waste > $beforeBulk) {

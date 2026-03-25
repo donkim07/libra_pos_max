@@ -446,6 +446,12 @@ class BulkManufacturingForm
         $newRemaining = max(0, $current - $sum);
         $set('remaining_quantity', $newRemaining);
 
+        if ($newRemaining <= 0.0001) {
+            $set('is_finished', true);
+            $set('waste_quantity', 0);
+            return;
+        }
+
         if ($get('is_finished')) {
             $set('waste_quantity', $newRemaining > 0 ? $newRemaining : 0);
         }
