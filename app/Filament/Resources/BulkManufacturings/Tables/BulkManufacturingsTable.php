@@ -27,9 +27,9 @@ class BulkManufacturingsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('total_cost')
-                    ->money()
+                    ->money('TSH')
                     ->sortable(),
-                TextColumn::make('created_by')
+                TextColumn::make('creator.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
