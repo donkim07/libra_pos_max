@@ -35,7 +35,16 @@ class BulkManufacturingService
 
             $totalCost = 0;
 
-            $ingredients = collect($data['ingredients']);
+            $bulkItem->loadMissing('billOfMaterial.items');
+            $hasBomComponents = $bulkItem->billOfMaterial?->items->isNotEmpty() ?? false;
+
+            $ingredients = collect($data['ingredients'] ?? []);
+            if ($hasBomComponents && $ingredients->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'ingredients' => 'Add or confirm bill of materials lines for this bulk assembly before saving.',
+                ]);
+            }
+
             $bulkBomItemIds = $ingredients->pluck('item_id')->unique();
 
             foreach ($ingredients as $ing) {
@@ -103,7 +112,11 @@ class BulkManufacturingService
 
             $this->processDivisions($bulk, $data['divisions'] ?? [], $bulkBomItemIds, $totalCost);
 
-            if ($data['is_finished'] && $data['remaining_quantity'] > 0) {
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $bulk->remaining_quantity = 0;
+                $bulk->waste_quantity = 0;
+                $bulk->is_finished = true;
+            } elseif ($data['is_finished'] && $data['remaining_quantity'] > 0) {
                 $waste = $data['remaining_quantity'];
                 $beforeBulk = $bulkItem->getQuantityForStore($storeId);
                 if ($waste > $beforeBulk) {
@@ -132,7 +145,13 @@ class BulkManufacturingService
                 $bulk->remaining_quantity = $data['remaining_quantity'];
             }
 
-            $bulk->is_finished = $data['is_finished'];
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $bulk->is_finished = true;
+                $bulk->remaining_quantity = 0;
+                $bulk->waste_quantity = 0;
+            } else {
+                $bulk->is_finished = $data['is_finished'];
+            }
             $bulk->total_cost = $totalCost;
             $bulk->save();
 
@@ -148,6 +167,10 @@ class BulkManufacturingService
             $bulkBomItemIds = $bulk->items->pluck('item_id')->unique();
             $totalCost = (float) $bulk->total_cost;
 
+            // Keep legacy records consistent: older bulks may have tracked remaining
+            // quantity but missing stock in item_store.
+            $this->syncBulkStockWithRemaining($bulk);
+
             if (isset($data['divisions']) && count($data['divisions']) > 0) {
                 $this->processDivisions($bulk, $data['divisions'], $bulkBomItemIds, $totalCost);
             }
@@ -160,7 +183,11 @@ class BulkManufacturingService
                 'total_cost' => $totalCost,
             ];
 
-            if ($updateData['is_finished'] && !$bulk->is_finished && $data['remaining_quantity'] > 0) {
+            if (($data['remaining_quantity'] ?? 0) <= 0.0001) {
+                $updateData['remaining_quantity'] = 0;
+                $updateData['is_finished'] = true;
+                $updateData['waste_quantity'] = 0;
+            } elseif ($updateData['is_finished'] && !$bulk->is_finished && $data['remaining_quantity'] > 0) {
                 $waste = $data['remaining_quantity'];
                 $beforeBulk = $bulkItem->getQuantityForStore($storeId);
                 if ($waste > $beforeBulk) {
@@ -197,6 +224,7 @@ class BulkManufacturingService
     {
         $bulkItem = $bulk->item;
         $storeId = $bulk->store_id;
+        $availableBase = (float) $bulk->remaining_quantity;
 
         foreach ($divisions as $divData) {
             $targetId = $divData['target_item_id'];
@@ -212,14 +240,17 @@ class BulkManufacturingService
             $produced = (float) $divData['quantity_produced'];
             $baseUsed = (float) $divData['total_base_used'];
 
-            // Deduct base from bulk stock
-            $beforeBulk = $bulkItem->getQuantityForStore($storeId);
-            if ($baseUsed > $beforeBulk) {
+            // Validate against this batch's tracked remaining quantity.
+            if ($baseUsed > $availableBase) {
                 throw ValidationException::withMessages([
-                    'new_divisions' => "Insufficient bulk stock for division: need {$baseUsed}, have {$beforeBulk}.",
+                    'new_divisions' => "Insufficient bulk batch quantity for division: need {$baseUsed}, have {$availableBase}.",
                 ]);
             }
-            $afterBulk = $beforeBulk - $baseUsed;
+            $availableBase -= $baseUsed;
+
+            // Mirror division deduction to global item_store stock.
+            $beforeBulk = $bulkItem->getQuantityForStore($storeId);
+            $afterBulk = max(0, $beforeBulk - $baseUsed);
             $bulkItem->updateStockForStore($storeId, $afterBulk);
 
             StockAdjustment::create([
@@ -268,7 +299,7 @@ class BulkManufacturingService
                 $divCost += $lineCost;
 
                 BulkManufacturingDivisionItem::create([
-                    'bulk_manufacturing_division_id' => $division->id,
+                    'bulk_man_division_id' => $division->id,
                     'item_id' => $comp->id,
                     'quantity' => $usedQty,
                     'unit_cost' => $unitCost,
@@ -317,5 +348,33 @@ class BulkManufacturingService
             $division->update(['total_cost' => $divCost]);
             $totalCost += $divCost;
         }
+    }
+
+    protected function syncBulkStockWithRemaining(BulkManufacturing $bulk): void
+    {
+        $bulkItem = $bulk->item;
+        $storeId = $bulk->store_id;
+        $remaining = (float) $bulk->remaining_quantity;
+        $currentStock = $bulkItem->getQuantityForStore($storeId);
+
+        if ($remaining <= 0 || $currentStock >= $remaining) {
+            return;
+        }
+
+        $syncedStock = $remaining;
+        $increaseBy = $syncedStock - $currentStock;
+        $bulkItem->updateStockForStore($storeId, $syncedStock);
+
+        StockAdjustment::create([
+            'item_id' => $bulkItem->id,
+            'store_id' => $storeId,
+            'bulk_manufacturing_id' => $bulk->id,
+            'type' => 'increase',
+            'quantity_change' => $increaseBy,
+            'quantity_before' => $currentStock,
+            'quantity_after' => $syncedStock,
+            'reason' => 'Auto-sync bulk stock from tracked remaining quantity for bulk manufacturing #' . $bulk->id,
+            'created_by' => Auth::id(),
+        ]);
     }
 }
