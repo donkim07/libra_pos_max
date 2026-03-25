@@ -15,13 +15,14 @@ class EditBulkManufacturing extends EditRecord
 {
     protected static string $resource = BulkManufacturingResource::class;
 
-    public function mount(int | string $record): void
+    protected function mutateFormDataBeforeFill(array $data): array
     {
-        parent::mount($record);
-
         $record = $this->getRecord();
+        $record->loadMissing(['items.component', 'divisions']);
 
-        $this->form->fill([
+        return [
+            ...$data,
+            'operation' => 'edit',
             'item_id' => $record->item_id,
             'date_manufactured' => $record->date_manufactured,
             'store_id' => $record->store_id,
@@ -41,6 +42,7 @@ class EditBulkManufacturing extends EditRecord
             })->toArray(),
             'existing_divisions' => $record->divisions->map(function ($div) {
                 $perUnit = $div->quantity_produced > 0 ? $div->base_quantity_used / $div->quantity_produced : 0;
+
                 return [
                     'target_item_id' => $div->target_item_id,
                     'paste_per_unit' => $perUnit,
@@ -49,7 +51,13 @@ class EditBulkManufacturing extends EditRecord
                 ];
             })->toArray(),
             'new_divisions' => [],
-        ]);
+        ];
+    }
+
+    protected function afterSave(): void
+    {
+        $this->record->refresh();
+        $this->fillForm();
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
@@ -58,6 +66,7 @@ class EditBulkManufacturing extends EditRecord
             $data['divisions'] = collect($data['new_divisions'])
                 ->map(function ($div) {
                     $div['total_base_used'] = ((float) ($div['paste_per_unit'] ?? 0)) * ((float) ($div['quantity_produced'] ?? 0));
+
                     return $div;
                 })
                 ->filter(function ($div) {

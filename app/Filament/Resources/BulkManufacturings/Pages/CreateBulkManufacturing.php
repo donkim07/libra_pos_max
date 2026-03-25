@@ -15,14 +15,12 @@ class CreateBulkManufacturing extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        if (isset($data['ingredients'])) {
-            $data['ingredients'] = collect($data['ingredients'])
-                ->filter(function ($item) {
-                    return !empty($item['item_id']) && isset($item['quantity']) && $item['quantity'] > 0;
-                })
-                ->values()
-                ->toArray();
-        }
+        $data['ingredients'] = collect($data['ingredients'] ?? [])
+            ->filter(function ($item) {
+                return !empty($item['item_id']) && isset($item['quantity']) && $item['quantity'] > 0;
+            })
+            ->values()
+            ->toArray();
 
         if (isset($data['new_divisions'])) {
             $data['divisions'] = collect($data['new_divisions'])

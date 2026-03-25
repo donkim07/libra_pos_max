@@ -35,7 +35,16 @@ class BulkManufacturingService
 
             $totalCost = 0;
 
-            $ingredients = collect($data['ingredients']);
+            $bulkItem->loadMissing('billOfMaterial.items');
+            $hasBomComponents = $bulkItem->billOfMaterial?->items->isNotEmpty() ?? false;
+
+            $ingredients = collect($data['ingredients'] ?? []);
+            if ($hasBomComponents && $ingredients->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'ingredients' => 'Add or confirm bill of materials lines for this bulk assembly before saving.',
+                ]);
+            }
+
             $bulkBomItemIds = $ingredients->pluck('item_id')->unique();
 
             foreach ($ingredients as $ing) {
