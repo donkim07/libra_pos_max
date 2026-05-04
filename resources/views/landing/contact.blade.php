@@ -39,14 +39,14 @@
         <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
             <h3 class="font-bold">Contact Info</h3>
             <ul class="mt-3 space-y-2 text-sm text-slate-300">
-                <li>Email: support@librapos.co.tz</li>
+                <li>Email: librapos@rejoda.co.tz</li>
                 <li>WhatsApp: +255748224536</li>
                 <li>Location: Dar es Salaam, Tanzania</li>
             </ul>
         </div>
         <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <h3 class="font-bold">Map</h3>
-            <div class="mt-3 flex h-40 items-center justify-center rounded-lg border border-dashed border-slate-700 text-sm text-slate-400">Google Maps Placeholder</div>
+            <h3 class="font-bold">Location</h3>
+            <p class="mt-3 text-sm leading-relaxed text-slate-300">Dar es Salaam, Tanzania</p>
         </div>
         <div class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm font-semibold text-emerald-300">
             Response within 24 hours

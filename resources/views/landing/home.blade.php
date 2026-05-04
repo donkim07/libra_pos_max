@@ -15,7 +15,11 @@
             <h1 class="mt-5 text-4xl font-extrabold leading-tight sm:text-5xl">Manufacture. Manage. Sell.<br>All in One Place.</h1>
             <p class="mt-5 max-w-xl text-lg text-slate-300">LibraPOS helps Tanzanian manufacturers control production, inventory, and sales from one reliable cloud workspace.</p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a href="/admin/login" class="rounded-lg bg-amber-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-400">Start Free Trial</a>
+                @auth
+                    <a href="{{ url('/admin') }}" class="rounded-lg bg-amber-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-400">Dashboard</a>
+                @else
+                    <a href="{{ url('/admin/login') }}" class="rounded-lg bg-amber-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-400">Start Free Trial</a>
+                @endauth
                 <a href="{{ route('landing.features') }}" class="rounded-lg border border-slate-600 px-6 py-3 text-sm font-semibold hover:border-amber-300 hover:text-amber-300">See Features</a>
             </div>
         </div>
@@ -42,11 +46,10 @@
 <section class="border-b border-slate-800 bg-slate-900">
     <div class="mx-auto max-w-7xl px-4 py-10 text-center sm:px-6 lg:px-8">
         <p class="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">Trusted by manufacturers across Tanzania</p>
-        <div class="mt-6 grid grid-cols-2 gap-4 text-sm text-slate-300 sm:grid-cols-4">
-            <div class="rounded-lg border border-slate-700 py-3">Dar Steel Works</div>
-            <div class="rounded-lg border border-slate-700 py-3">Mwanza Plastics</div>
-            <div class="rounded-lg border border-slate-700 py-3">Arusha Foods</div>
-            <div class="rounded-lg border border-slate-700 py-3">Dodoma Homecare</div>
+        <div class="mt-6 grid gap-4 text-sm text-slate-300 sm:grid-cols-3">
+            <div class="rounded-lg border border-slate-700 py-3">Leymax Cakes</div>
+            <div class="rounded-lg border border-slate-700 py-3">Rejoda</div>
+            <div class="rounded-lg border border-slate-700 py-3">SKS Pharma Ltd.</div>
         </div>
     </div>
 </section>
@@ -120,7 +123,11 @@
     <div class="mx-auto max-w-5xl rounded-2xl border border-amber-400/30 bg-slate-950 px-6 py-10 text-center sm:px-10">
         <h2 class="text-3xl font-bold">Ready to modernize your manufacturing business?</h2>
         <p class="mx-auto mt-3 max-w-2xl text-slate-300">Replace scattered tools with one reliable operating system for production, stock, and sales.</p>
-        <a href="/admin/login" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Start Your Free Week</a>
+        @auth
+            <a href="{{ url('/admin') }}" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Open Dashboard</a>
+        @else
+            <a href="{{ url('/admin/login') }}" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Start Your Free Week</a>
+        @endauth
     </div>
 </section>
 @endsection

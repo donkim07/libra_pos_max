@@ -52,11 +52,16 @@
                     <a href="{{ route('landing.contact') }}" class="hover:text-amber-300">Contact</a>
                 </div>
                 <div class="hidden items-center gap-3 md:flex">
-                    <a href="/admin/login"
-                        class="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold hover:border-amber-300 hover:text-amber-300">Login</a>
-                    <a href="/admin/login"
-                        class="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-400">Start
-                        Free Trial</a>
+                    @auth
+                        <a href="{{ url('/admin') }}"
+                            class="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-400">Dashboard</a>
+                    @else
+                        <a href="{{ url('/admin/login') }}"
+                            class="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold hover:border-amber-300 hover:text-amber-300">Login</a>
+                        <a href="{{ url('/admin/login') }}"
+                            class="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-400">Start
+                            Free Trial</a>
+                    @endauth
                 </div>
                 <button @click="menuOpen = !menuOpen" class="md:hidden rounded-lg border border-slate-600 p-2"
                     aria-label="Toggle Menu">
@@ -73,11 +78,16 @@
                     <a href="{{ route('landing.pricing') }}">Pricing</a>
                     <a href="{{ route('landing.about') }}">About</a>
                     <a href="{{ route('landing.contact') }}">Contact</a>
-                    <a href="/admin/login"
-                        class="mt-2 rounded-lg border border-slate-600 px-4 py-2 text-center">Login</a>
-                    <a href="/admin/login"
-                        class="rounded-lg bg-amber-500 px-4 py-2 text-center font-semibold text-slate-950">Start Free
-                        Trial</a>
+                    @auth
+                        <a href="{{ url('/admin') }}"
+                            class="mt-2 rounded-lg bg-amber-500 px-4 py-2 text-center font-semibold text-slate-950">Dashboard</a>
+                    @else
+                        <a href="{{ url('/admin/login') }}"
+                            class="mt-2 rounded-lg border border-slate-600 px-4 py-2 text-center">Login</a>
+                        <a href="{{ url('/admin/login') }}"
+                            class="rounded-lg bg-amber-500 px-4 py-2 text-center font-semibold text-slate-950">Start Free
+                            Trial</a>
+                    @endauth
                 </div>
             </div>
         </header>
@@ -104,7 +114,13 @@
                 <div>
                     <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Product</h4>
                     <ul class="mt-3 space-y-2 text-sm text-slate-300">
-                        <li><a href="/admin/login" class="hover:text-amber-300">Login to Dashboard</a></li>
+                        <li>
+                            @auth
+                                <a href="{{ url('/admin') }}" class="hover:text-amber-300">Open Dashboard</a>
+                            @else
+                                <a href="{{ url('/admin/login') }}" class="hover:text-amber-300">Login to Dashboard</a>
+                            @endauth
+                        </li>
                         <li><a href="{{ route('landing.about') }}" class="hover:text-amber-300">About Us</a></li>
                         <li><a href="{{ route('landing.contact') }}" class="hover:text-amber-300">Contact</a></li>
                     </ul>
@@ -123,10 +139,17 @@
             </div>
         </footer>
 
-        <a href="/admin/login"
-            class="fixed bottom-4 left-1/2 z-50 w-[92%] -translate-x-1/2 rounded-xl bg-amber-500 px-4 py-3 text-center text-sm font-bold text-slate-950 shadow-lg md:hidden">
-            Start Free Trial
-        </a>
+        @guest
+            <a href="{{ url('/admin/login') }}"
+                class="fixed bottom-4 left-1/2 z-50 w-[92%] -translate-x-1/2 rounded-xl bg-amber-500 px-4 py-3 text-center text-sm font-bold text-slate-950 shadow-lg md:hidden">
+                Start Free Trial
+            </a>
+        @else
+            <a href="{{ url('/admin') }}"
+                class="fixed bottom-4 left-1/2 z-50 w-[92%] -translate-x-1/2 rounded-xl bg-amber-500 px-4 py-3 text-center text-sm font-bold text-slate-950 shadow-lg md:hidden">
+                Dashboard
+            </a>
+        @endguest
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

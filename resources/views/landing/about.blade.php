@@ -43,22 +43,20 @@
 
 <section class="border-y border-slate-800 bg-slate-900/70">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold">Team</h2>
-        <div class="mt-8 grid gap-6 md:grid-cols-3">
-            <div class="rounded-xl border border-slate-800 p-6 text-center">
-                <div class="mx-auto h-16 w-16 rounded-full bg-slate-700"></div>
-                <h3 class="mt-4 font-bold">Product Lead</h3>
-                <p class="text-sm text-slate-400">Operations & product strategy</p>
+        <h2 class="text-3xl font-bold">Why teams stay with LibraPOS</h2>
+        <p class="mt-3 max-w-3xl text-slate-300">We are not chasing feature lists for their own sake. The product exists so owners and floor teams can answer simple questions fast: what do we have, what did we make, what did we sell, and where did the money go?</p>
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+            <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+                <h3 class="text-lg font-bold text-amber-300">Traceability you can defend</h3>
+                <p class="mt-2 text-sm text-slate-300">Production, stock movements, and sales stay linked so you can explain variances and coach your team with facts, not guesses.</p>
             </div>
-            <div class="rounded-xl border border-slate-800 p-6 text-center">
-                <div class="mx-auto h-16 w-16 rounded-full bg-slate-700"></div>
-                <h3 class="mt-4 font-bold">Engineering Lead</h3>
-                <p class="text-sm text-slate-400">Platform and reliability</p>
+            <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+                <h3 class="text-lg font-bold text-amber-300">Built for real Tanzanian operations</h3>
+                <p class="mt-2 text-sm text-slate-300">Pricing in TZS, workflows that match how trading and manufacturing actually run here, and room to grow from one site to many without changing systems.</p>
             </div>
-            <div class="rounded-xl border border-slate-800 p-6 text-center">
-                <div class="mx-auto h-16 w-16 rounded-full bg-slate-700"></div>
-                <h3 class="mt-4 font-bold">Customer Success</h3>
-                <p class="text-sm text-slate-400">Onboarding and growth support</p>
+            <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+                <h3 class="text-lg font-bold text-amber-300">A partnership mindset</h3>
+                <p class="mt-2 text-sm text-slate-300">We invest in onboarding, honest limits per plan, and clear upgrades so your investment in process improvement compounds over time.</p>
             </div>
         </div>
     </div>
@@ -68,7 +66,11 @@
     <div class="mx-auto max-w-4xl px-4 text-center sm:px-6">
         <h2 class="text-3xl font-bold">Start your free trial today</h2>
         <p class="mt-3 text-slate-300">See how quickly your team can move from manual processes to predictable execution.</p>
-        <a href="/admin/login" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Try LibraPOS Free</a>
+        @auth
+            <a href="{{ url('/admin') }}" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Open Dashboard</a>
+        @else
+            <a href="{{ url('/admin/login') }}" class="mt-7 inline-block rounded-lg bg-amber-500 px-6 py-3 font-bold text-slate-950 hover:bg-amber-400">Try LibraPOS Free</a>
+        @endauth
     </div>
 </section>
 @endsection
