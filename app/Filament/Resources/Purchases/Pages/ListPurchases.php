@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Purchases\Pages;
 
+use App\Filament\Resources\Purchases\Widgets\PurchaseTableStats;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\ListRecords;
@@ -18,6 +19,13 @@ class ListPurchases extends ListRecords
             CreateAction::make(),
             ExportAction::make()
                 ->exporter(PurchaseExporter::class),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            PurchaseTableStats::class,
         ];
     }
 }

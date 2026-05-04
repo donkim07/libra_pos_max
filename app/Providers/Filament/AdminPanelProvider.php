@@ -52,7 +52,12 @@ class AdminPanelProvider extends PanelProvider
             ->spa(hasPrefetching: true)
             ->unsavedChangesAlerts()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'danger' => Color::Rose,
+                'info' => Color::Sky,
             ])
             ->profile(isSimple: false)
             // ->userMenuItems([

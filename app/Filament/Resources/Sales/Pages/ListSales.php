@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Sales\Pages;
 
+use App\Filament\Resources\Sales\Widgets\SalesTableStats;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use App\Filament\Exports\SaleExporter;
@@ -21,5 +22,10 @@ class ListSales extends ListRecords
         ];
     }
 
-
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            SalesTableStats::class,
+        ];
+    }
 }
