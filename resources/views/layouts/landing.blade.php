@@ -6,8 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'LibraPOS | Manufacturing POS for Tanzania')</title>
     <meta name="description" content="@yield('meta_description', 'Multi-tenant POS and manufacturing management software for Tanzanian businesses.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'POS Tanzania, manufacturing software Tanzania, inventory management, sales and invoicing, multi-tenant SaaS POS')">
+    <meta name="robots" content="@yield('meta_robots', 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1')">
+    <meta name="author" content="LibraPOS">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
     <meta property="og:title" content="@yield('og_title', 'LibraPOS | Manufacturing POS for Tanzania')">
     <meta property="og:description" content="@yield('og_description', 'Manufacture, manage inventory, and sell with confidence using one modern system.')">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="@yield('og_url', url()->current())">
+    <meta property="og:site_name" content="LibraPOS">
+    <meta property="og:locale" content="en_TZ">
+    <meta property="og:image" content="@yield('og_image', asset('images/seo/og-default.png'))">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'LibraPOS marketing page preview')">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('twitter_title', trim($__env->yieldContent('og_title', $__env->yieldContent('title', 'LibraPOS | Manufacturing POS for Tanzania'))))">
+    <meta name="twitter:description" content="@yield('twitter_description', trim($__env->yieldContent('og_description', $__env->yieldContent('meta_description', 'Manufacture, manage inventory, and sell with confidence using one modern system.'))))">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('images/seo/og-default.png'))">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -17,6 +32,32 @@
     <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "LibraPOS",
+            "url": "{{ rtrim(config('app.url', url('/')), '/') }}",
+            "logo": "{{ asset('images/seo/og-default.png') }}",
+            "description": "Multi-tenant POS and manufacturing management software for Tanzanian businesses.",
+            "email": "librapos@rejoda.co.tz",
+            "telephone": "+255748224536",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Dar es Salaam",
+                "addressCountry": "TZ"
+            }
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "LibraPOS",
+            "url": "{{ rtrim(config('app.url', url('/')), '/') }}"
+        }
+    </script>
+    @yield('structured_data')
     <style>
         body {
             font-family: 'DM Sans', sans-serif;

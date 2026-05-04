@@ -2,8 +2,11 @@
 
 @section('title', 'Pricing | LibraPOS')
 @section('meta_description', 'Transparent TZS pricing for Tanzanian manufacturers. Start with a 7-day free trial.')
+@section('meta_keywords', 'TZS POS pricing, SaaS pricing Tanzania, manufacturing software plans, free trial POS')
+@section('canonical_url', route('landing.pricing'))
 @section('og_title', 'Pricing | LibraPOS')
 @section('og_description', 'Choose Starter, Business, or Enterprise with no-risk 7-day free trial.')
+@section('og_url', route('landing.pricing'))
 
 @section('content')
 <section class="border-b border-slate-800 bg-grid">

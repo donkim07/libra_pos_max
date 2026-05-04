@@ -1,2 +1,11 @@
 User-agent: *
+Allow: /
+
+# Keep admin/auth pages out of public indexing
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/login
+
+Sitemap: https://librapos.co.tz/sitemap.xml
+User-agent: *
 Disallow:

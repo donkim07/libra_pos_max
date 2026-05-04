@@ -4,8 +4,11 @@
 @section('meta_description',
     'Explore manufacturing, inventory, sales, and analytics capabilities built for Tanzanian
     businesses.')
+@section('meta_keywords', 'manufacturing batch tracking, stock movement logs, POS invoicing, inventory warehousing Tanzania')
+@section('canonical_url', route('landing.features'))
 @section('og_title', 'Features | LibraPOS')
 @section('og_description', 'From production batches to invoicing and reports, LibraPOS keeps operations connected.')
+@section('og_url', route('landing.features'))
 
 @section('content')
     <section class="border-b border-slate-800 bg-grid">
