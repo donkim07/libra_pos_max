@@ -2,8 +2,11 @@
 
 @section('title', 'Contact | LibraPOS')
 @section('meta_description', 'Talk to LibraPOS about plans, onboarding, and manufacturing operations support.')
+@section('meta_keywords', 'contact LibraPOS, POS support Tanzania, software onboarding Dar es Salaam')
+@section('canonical_url', route('landing.contact'))
 @section('og_title', 'Contact | LibraPOS')
 @section('og_description', 'Reach out to the LibraPOS team in Dar es Salaam for fast support and onboarding guidance.')
+@section('og_url', route('landing.contact'))
 
 @section('content')
 <section class="border-b border-slate-800 bg-grid">

@@ -2,8 +2,11 @@
 
 @section('title', 'About | LibraPOS')
 @section('meta_description', 'Learn why LibraPOS was built to empower Tanzanian manufacturers with modern digital tools.')
+@section('meta_keywords', 'about LibraPOS, Tanzanian software company, local-first POS, manufacturing digitization Tanzania')
+@section('canonical_url', route('landing.about'))
 @section('og_title', 'About | LibraPOS')
 @section('og_description', 'Local-first POS and manufacturing software for reliable growth and better decisions.')
+@section('og_url', route('landing.about'))
 
 @section('content')
 <section class="border-b border-slate-800 bg-grid">

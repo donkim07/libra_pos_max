@@ -2,8 +2,11 @@
 
 @section('title', 'LibraPOS | Manufacture, Manage, Sell')
 @section('meta_description', 'Manufacture, track stock, and run POS sales in one modern SaaS platform for Tanzanian businesses.')
+@section('meta_keywords', 'POS for manufacturers Tanzania, manufacturing ERP lite Tanzania, inventory and invoicing software, SaaS POS Dar es Salaam')
+@section('canonical_url', route('landing.home'))
 @section('og_title', 'LibraPOS | Manufacture, Manage, Sell')
 @section('og_description', 'A multi-tenant POS built for Tanzanian manufacturing and trading operations.')
+@section('og_url', route('landing.home'))
 
 @section('content')
 <section class="bg-grid border-b border-slate-800">
