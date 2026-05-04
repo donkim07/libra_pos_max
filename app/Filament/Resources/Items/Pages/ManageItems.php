@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Items\Pages;
 
+use App\Filament\Resources\Items\Widgets\InventoryTableStats;
 use App\Models\Item;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
@@ -85,6 +86,13 @@ class ManageItems extends ManageRecords
                 ->exporter(ItemExporter::class),
 
 
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            InventoryTableStats::class,
         ];
     }
 

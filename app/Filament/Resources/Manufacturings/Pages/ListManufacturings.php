@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Manufacturings\Pages;
 
+use App\Filament\Resources\Manufacturings\Widgets\ManufacturingTableStats;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
@@ -23,6 +24,13 @@ class ListManufacturings extends ListRecords
             //     ->chunkSize(500),
             // ExportAction::make()
             //     ->exporter(ManufacturingExporter::class),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ManufacturingTableStats::class,
         ];
     }
 }

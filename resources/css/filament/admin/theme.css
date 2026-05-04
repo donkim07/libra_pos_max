@@ -3,43 +3,521 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/*
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
+:root {
+    /* Page bg — cool blue-slate, no gold tones */
+    --app-bg:
+        radial-gradient(900px circle at 0% 0%,   #dde8ff 0%, transparent 55%),
+        radial-gradient(700px circle at 100% 0%,  #e0f2fe 0%, transparent 50%),
+        radial-gradient(600px circle at 50% 100%, #ede9fe 0%, transparent 55%),
+        #eef2f7;
+
+    --app-surface:          rgba(255, 255, 255, 0.75);
+    --app-surface-strong:   #ffffff;
+    --app-border:           rgba(99, 102, 241, 0.12);
+    --app-border-mid:       rgba(99, 102, 241, 0.22);
+
+    /* Sidebar — rich indigo-violet gradient */
+    --app-sidebar-bg:       linear-gradient(160deg, #312e81 0%, #4c1d95 45%, #3730a3 100%);
+    --app-sidebar-border:   rgba(255, 255, 255, 0.10);
+    /* non-active: bright lavender-white — clearly visible on indigo, not harsh */
+    --app-sidebar-item:     rgba(220, 225, 255, 0.88);
+    --app-sidebar-item-hover-bg:    rgba(255, 255, 255, 0.12);
+    /* hover steps up to full white */
+    --app-sidebar-item-hover-text:  #ffffff;
+    --app-sidebar-item-active-bg:   rgba(255, 255, 255, 0.20);
+    --app-sidebar-item-active-text: #312e81;
+    --app-sidebar-item-accent:      #c7d2fe;
+
+    /* Coloured header strip — light mode: subtle indigo tint, NOT full gradient */
+    /* Only the page-level .fi-header stays bold; section/table headers stay calm */
+    --app-header-bg:        linear-gradient(135deg, #4438cad3 0%, #6d28d924 60%, #4d1d950d 100%);
+    --app-header-text:      #e0e7ff;
+    --app-header-border:    rgba(255, 255, 255, 0.12);
+
+    /* Section / table / modal headers — gentle tinted surface */
+    --app-subheader-bg:     linear-gradient(135deg,
+                                rgba(99, 102, 241, 0.07) 0%,
+                                rgba(109, 40, 217, 0.05) 100%);
+    --app-subheader-border: rgba(99, 102, 241, 0.12);
+    --app-subheader-text:   #3730a3;
+
+    --app-topbar-bg:        rgba(255, 255, 255, 0.88);
+    --app-topbar-border:    rgba(99, 102, 241, 0.14);
+
+    --app-shadow:           0 4px 28px -6px rgba(67, 56, 202, 0.16), 0 1px 4px rgba(0,0,0,0.05);
+    --app-shadow-card:      0 2px 12px -3px rgba(67, 56, 202, 0.10);
+
+    --app-row-hover:        rgba(99, 102, 241, 0.04);
+    --app-row-border:       rgba(99, 102, 241, 0.09);
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+.dark {
+    --app-bg:
+        radial-gradient(900px circle at 10% -5%,  #1e1b4b 0%, transparent 45%),
+        radial-gradient(700px circle at 90% 15%,  #0c4a6e 0%, transparent 40%),
+        #020617;
+
+    --app-surface:          rgba(15, 23, 42, 0.80);
+    --app-surface-strong:   #111827;
+    --app-border:           rgba(255, 255, 255, 0.07);
+    --app-border-mid:       rgba(255, 255, 255, 0.13);
+
+    --app-sidebar-bg:       linear-gradient(180deg, #030712 0%, #0f172a 65%, #020617 100%);
+    --app-sidebar-border:   rgba(255, 255, 255, 0.07);
+    --app-sidebar-item:     #94a3b8;
+    --app-sidebar-item-hover-bg:    rgba(129, 140, 248, 0.10);
+    --app-sidebar-item-hover-text:  #a5b4fc;
+    --app-sidebar-item-active-bg:   rgba(129, 140, 248, 0.18);
+    --app-sidebar-item-active-text: #e0e7ff;
+    --app-sidebar-item-accent:      #818cf8;
+
+    --app-header-bg:        linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    --app-header-text:      #a5b4fc;
+    --app-header-border:    rgba(255, 255, 255, 0.07);
+
+    /* Section / table / modal headers in dark */
+    --app-subheader-bg:     linear-gradient(135deg,
+                                rgba(129, 140, 248, 0.08) 0%,
+                                rgba(99, 102, 241, 0.05) 100%);
+    --app-subheader-border: rgba(129, 140, 248, 0.14);
+    --app-subheader-text:   #a5b4fc;
+
+    --app-topbar-bg:        rgba(2, 6, 23, 0.88);
+    --app-topbar-border:    rgba(255, 255, 255, 0.07);
+
+    --app-shadow:           0 4px 32px -6px rgba(0, 0, 0, 0.55), 0 1px 6px rgba(0,0,0,0.4);
+    --app-shadow-card:      0 2px 16px -3px rgba(0, 0, 0, 0.45);
+
+    --app-row-hover:        rgba(129, 140, 248, 0.07);
+    --app-row-border:       rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes stat-sweep-in {
+    from {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   PAGE BODY
+   ============================================================ */
+.fi-body {
+    background: var(--app-bg);
+    min-height: 100vh;
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.fi-topbar {
+    backdrop-filter: blur(14px) saturate(1.5);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5);
+    background: var(--app-topbar-bg);
+    border-bottom: 1px solid var(--app-topbar-border);
+    box-shadow: 0 1px 0 var(--app-border), 0 2px 12px -4px rgba(99,102,241,0.08);
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
 .fi-sidebar {
-    background-color: #ececec;
-}
-.fi-sidebar    &:where(.dark, .dark *) {
-    background-color: #0f0f0f;
+    background: var(--app-sidebar-bg);
+    border-inline-end: 1px solid var(--app-sidebar-border);
+    box-shadow: 4px 0 28px -4px rgba(67, 56, 202, 0.30);
 }
 
+.fi-sidebar-header {
+    border-bottom: 1px solid var(--app-sidebar-border);
+}
 
-.fi-main{
-    background-color: #e1e1e1;
+.fi-sidebar-group-label {
+    color: rgba(199, 210, 254, 0.75);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+}
+
+.fi-sidebar-item-button,
+.fi-sidebar-group-button {
+    color: var(--app-sidebar-item);
+    border-radius: 10px;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.fi-sidebar-item-button svg,
+.fi-sidebar-group-button svg {
+    color: rgba(199, 210, 254, 0.75);
+    transition: color 0.18s ease;
+}
+
+.fi-sidebar-item-button:hover,
+.fi-sidebar-group-button:hover {
+    background: var(--app-sidebar-item-hover-bg);
+    color: var(--app-sidebar-item-hover-text);
+}
+
+.fi-sidebar-item-button:hover svg,
+.fi-sidebar-group-button:hover svg {
+    color: #c7d2fe;
+}
+
+/* Active — light mode: bright pill, icon accent */
+.fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    background: var(--app-sidebar-item-active-bg);
+    color: var(--app-sidebar-item-active-text);
+    font-weight: 600;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 0 rgba(0,0,0,0.10),
+        0 0 0 1px rgba(255,255,255,0.10);
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-button svg {
+    color: var(--app-sidebar-item-accent);
+}
+
+/* Dark mode overrides for sidebar — keep the dark nav dark as before */
+.dark .fi-sidebar {
+    box-shadow: 2px 0 24px -4px rgba(0, 0, 0, 0.5);
+}
+
+.dark .fi-sidebar-item-button svg,
+.dark .fi-sidebar-group-button svg {
+    color: #64748b;
+}
+
+.dark .fi-sidebar-item-button:hover svg,
+.dark .fi-sidebar-group-button:hover svg {
+    color: #1e1b4b;
+}
+
+.dark .fi-sidebar-group-label {
+    color: rgba(100, 116, 139, 0.70);
+}
+
+.fi-sidebar-item-label{
+    color: #c7d2fe;
+}
+
+.fi-sidebar-item {
+    &.fi-active {
+        & > .fi-sidebar-item-btn {
+            & > .fi-sidebar-item-label {
+                color: var(--primary-700);
+            }
+        }
+    }
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.fi-header,
+.fi-simple-page-header {
+    background: var(--app-header-bg);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--app-header-border);
+    box-shadow: 0 4px 20px -4px rgba(67, 56, 202, 0.30);
+    /* position: relative; */
+    /* overflow: hidden; */
+}
+
+.fi-header::after,
+.fi-simple-page-header::after {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -8%;
+    width: 55%;
+    height: 220%;
+    background: radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.13) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.fi-header-heading,
+.fi-simple-page-header h1 {
+    color: #ffffff !important;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.fi-breadcrumbs li,
+.fi-breadcrumbs a,
+.fi-breadcrumbs span,
+.fi-header-subheading {
+    color: rgba(199, 210, 254, 0.80) !important;
+    font-size: 0.82rem;
+}
+
+.fi-header-actions .fi-btn {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.20);
+    color: #ffffff;
+}
+
+.fi-header-actions .fi-btn:hover {
+    background: rgba(255,255,255,0.24);
+}
+
+/* ============================================================
+   SECTION / TABLE / WIDGET BASE
+   ============================================================ */
+.fi-section,
+.fi-ta,
+.fi-wi-widget {
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--app-shadow-card);
+}
+
+/* ============================================================
+   SECTION & TABLE HEADER STRIP — subtle tint, not indigo blast
+   ============================================================ */
+.fi-section-header,
+.fi-ta-header-ctn {
+    background: var(--app-subheader-bg);
+    border-radius: 14px 14px 0 0;
+    border-bottom: 1px solid var(--app-subheader-border);
+    padding: 0.85rem 1.25rem;
+    position: relative;
+    /* overflow: hidden; */
+}
+
+/* no ::after glow needed on subtle headers */
+
+.fi-section-header-heading,
+.fi-ta-header-ctn h2,
+.fi-ta-header-ctn h3 {
+    color: var(--app-subheader-text) !important;
+    font-weight: 600;
+}
+
+.fi-section-header-description {
+    color: color-mix(in srgb, var(--app-subheader-text) 65%, transparent) !important;
+    font-size: 0.82rem;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.fi-ta-header,
+.fi-ta-footer {
+    background: color-mix(in srgb, var(--app-surface-strong) 90%, transparent);
+    border-color: var(--app-border);
+}
+
+.fi-ta-header-cell {
+    color: #6366f1;
+    font-size: 0.70rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.dark .fi-ta-header-cell {
+    color: #818cf8;
 }
 
 .fi-ta-row {
-    &.fi-striped {
-        background-color: #eeeeee;
-    }
+    border-bottom: 1px solid var(--app-row-border);
+    transition: background 0.12s ease;
 }
 
-.fi-sidebar-item-btn {
-    &:hover {
-        background-color: #d4d4d4;
-    }
-    &.fi-active {
-        background-color: #c0c0c0;
-        font-weight: bold;
-    }
+.fi-ta-row:hover {
+    background: var(--app-row-hover);
 }
 
+/* ============================================================
+   STAT CARDS — animated arc sweep from right
+   ============================================================ */
+.fi-wi-stats-overview-stat {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-strong);
+    box-shadow: var(--app-shadow-card);
+    transition: transform 0.22s ease, box-shadow 0.25s ease;
+}
 
+.fi-wi-stats-overview-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--app-shadow);
+}
 
-
-
+/*
+ * The sweep: an ellipse-clipped shape slides in from the right.
+ * It covers the right ~55% of the card, shaped like a curved vertical blade
+ * (tall ellipse clipped so only the right portion shows).
+ * The left edge of this shape forms the "arc from top-right to bottom-centre"
+ * that you described.
  */
+.fi-wi-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    right: 0;
+    width: 58%;
+    height: 120%;
+    /* ellipse centred far right creates a curved left edge = the arc */
+    clip-path: ellipse(80% 90% at 80% 50%);
+    background: linear-gradient(
+        160deg,
+        var(--stat-color-a, #6366f1) 0%,
+        var(--stat-color-b, #818cf8) 100%
+    );
+    opacity: 0.14;
+    animation: stat-sweep-in 0.60s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: calc(var(--stat-i, 0) * 0.09s + 0.05s);
+    pointer-events: none;
+}
+
+/* Second layer — slightly more opaque, delayed, creates depth */
+.fi-wi-stats-overview-stat::after {
+    content: '';
+    position: absolute;
+    top: -15%;
+    right: -2%;
+    width: 50%;
+    height: 130%;
+    clip-path: ellipse(75% 85% at 85% 50%);
+    background: linear-gradient(
+        160deg,
+        var(--stat-color-a, #6366f1) 0%,
+        transparent 80%
+    );
+    opacity: 0.20;
+    animation: stat-sweep-in 0.60s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: calc(var(--stat-i, 0) * 0.09s + 0.14s);
+    pointer-events: none;
+}
+
+/* All stat cards — same indigo pair as requested */
+.fi-wi-stats-overview-stat:nth-child(1) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 0; }
+.fi-wi-stats-overview-stat:nth-child(2) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 1; }
+.fi-wi-stats-overview-stat:nth-child(3) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 2; }
+.fi-wi-stats-overview-stat:nth-child(4) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 3; }
+.fi-wi-stats-overview-stat:nth-child(5) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 4; }
+.fi-wi-stats-overview-stat:nth-child(6) { --stat-color-a: #6366f1a1; --stat-color-b: #a5b4fc00; --stat-i: 5; }
+
+.fi-wi-stats-overview-stat-value,
+.fi-wi-stats-overview-stat-label {
+    position: relative;
+    z-index: 1;
+}
+
+.fi-wi-stats-overview-stat-value {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+/* ============================================================
+   MODAL HEADER
+   ============================================================ */
+.fi-modal-window {
+    border-radius: 18px;
+    border: 1px solid var(--app-border-mid);
+    box-shadow: var(--app-shadow);
+    /* overflow: hidden; */
+}
+
+.fi-modal-header {
+    background: var(--app-subheader-bg);
+    border-radius: 14px 14px 0 0;
+    border-bottom: 1px solid var(--app-subheader-border);
+    padding: 1rem 1.25rem;
+    position: relative;
+    /* overflow: hidden; */
+}
+
+.fi-modal-header h2,
+.fi-modal-heading {
+    color: var(--app-subheader-text) !important;
+    font-weight: 600;
+}
+
+/* ============================================================
+   FORM INPUTS & BUTTONS
+   ============================================================ */
+.fi-btn {
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.fi-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px -3px rgba(99, 102, 241, 0.40);
+}
+
+.fi-btn:active {
+    transform: translateY(0);
+}
+
+.fi-input,
+.fi-select-input,
+.fi-textarea,
+.fi-input-wrapper {
+    border-radius: 10px;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.fi-input:focus,
+.fi-select-input:focus,
+.fi-textarea:focus,
+.fi-input-wrapper:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    outline: none;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.fi-badge {
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.70rem;
+    letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   MISC
+   ============================================================ */
+.fi-in-entry-wrp { border-radius: 12px; }
+
+.fi-fo-ctn {
+    border-radius: 14px;
+    box-shadow: var(--app-shadow);
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar            { width: 5px; height: 5px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: var(--app-border-mid); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.35); }
