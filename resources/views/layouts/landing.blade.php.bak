@@ -34,8 +34,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script type="application/ld+json">
         {
-            "@@context": "https://schema.org",
-            "@@type": "Organization",
+            "@context": "https://schema.org",
+            "@type": "Organization",
             "name": "LibraPOS",
             "url": "{{ rtrim(config('app.url', url('/')), '/') }}",
             "logo": "{{ asset('images/seo/og-default.png') }}",
@@ -51,8 +51,8 @@
     </script>
     <script type="application/ld+json">
         {
-            "@@context": "https://schema.org",
-            "@@type": "WebSite",
+            "@context": "https://schema.org",
+            "@type": "WebSite",
             "name": "LibraPOS",
             "url": "{{ rtrim(config('app.url', url('/')), '/') }}"
         }
@@ -126,8 +126,7 @@
                         <a href="{{ url('/admin/login') }}"
                             class="mt-2 rounded-lg border border-slate-600 px-4 py-2 text-center">Login</a>
                         <a href="{{ url('/admin/login') }}"
-                            class="rounded-lg bg-amber-500 px-4 py-2 text-center font-semibold text-slate-950">Start
-                            Free
+                            class="rounded-lg bg-amber-500 px-4 py-2 text-center font-semibold text-slate-950">Start Free
                             Trial</a>
                     @endif
                 </div>
@@ -160,8 +159,7 @@
                             @if (auth()->check())
                                 <a href="{{ url('/admin') }}" class="hover:text-amber-300">Open Dashboard</a>
                             @else
-                                <a href="{{ url('/admin/login') }}" class="hover:text-amber-300">Login to
-                                    Dashboard</a>
+                                <a href="{{ url('/admin/login') }}" class="hover:text-amber-300">Login to Dashboard</a>
                             @endif
                         </li>
                         <li><a href="{{ route('landing.about') }}" class="hover:text-amber-300">About Us</a></li>
@@ -178,7 +176,7 @@
                 </div>
             </div>
             <div class="border-t border-slate-800 px-4 py-4 text-center text-xs text-slate-400">
-                Â© {{ date('Y') }} LibraPOS. Made in Tanzania.
+                © {{ date('Y') }} LibraPOS. Made in Tanzania.
             </div>
         </footer>
 
